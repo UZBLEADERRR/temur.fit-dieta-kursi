@@ -1,102 +1,125 @@
-// TEMUR.FIT — Interaktiv funksiyalar
+// ==========================================
+// TEMUR.FIT — JAVASCRIPT LOGIC
+// ==========================================
 
-// 1. Valyutani oʻzgartirish (KRW / UZS)
-function setCurrency(curr) {
-  const krwBtns = document.querySelectorAll('.curr-btn');
-  krwBtns.forEach(btn => {
-    if (btn.dataset.curr === curr) {
+let currentCurrency = 'KRW';
+
+// 1. Valyuta almashtirish
+function initCurrencyToggle() {
+  const toggleContainer = document.getElementById('currencyToggle');
+  if (!toggleContainer) return;
+
+  const buttons = toggleContainer.querySelectorAll('.curr-btn');
+  buttons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      buttons.forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
+      currentCurrency = btn.getAttribute('data-curr');
+      updatePrices();
+    });
+  });
+}
+
+function updatePrices() {
+  const priceElements = document.querySelectorAll('.price-val');
+  priceElements.forEach(el => {
+    if (currentCurrency === 'UZS') {
+      const uzs = el.getAttribute('data-uzs');
+      if (uzs) el.textContent = uzs;
     } else {
-      btn.classList.remove('active');
+      const krw = el.getAttribute('data-krw');
+      if (krw) el.textContent = krw;
     }
   });
 
-  const krwElements = document.querySelectorAll('.price-krw');
-  const uzsElements = document.querySelectorAll('.price-uzs');
-
-  if (curr === 'UZS') {
-    krwElements.forEach(el => el.classList.add('hidden'));
-    uzsElements.forEach(el => el.classList.remove('hidden'));
-  } else {
-    krwElements.forEach(el => el.classList.remove('hidden'));
-    uzsElements.forEach(el => el.classList.add('hidden'));
+  const stickyPrice = document.getElementById('stickyPriceText');
+  if (stickyPrice) {
+    stickyPrice.textContent = currentCurrency === 'UZS' ? '700,000 SO\'M' : '100,000 KRW';
   }
 }
 
-// 2. Roʻyxatdan oʻtish / Tanlash modali
-function openTariffModal(tariffName, tariffPrice) {
+// 2. Ro'yxatdan o'tish modali
+function openEnroll(tariffName, tariffPrice) {
   const modal = document.getElementById('enrollModal');
-  const modalTitle = document.getElementById('modalTariffName');
-  const modalMsg = document.getElementById('modalCustomMsg');
-  const tgBtn = document.getElementById('modalTgBtn');
-  const instaBtn = document.getElementById('modalInstaBtn');
+  const titleEl = document.getElementById('modalTariffTitle');
+  const priceEl = document.getElementById('modalTariffPrice');
+  const tgLink = document.getElementById('modalTgLink');
+  const instaLink = document.getElementById('modalInstaLink');
 
-  modalTitle.textContent = tariffName;
-  modalMsg.textContent = `${tariffName} bo'yicha shaxsiy konsultatsiya yoki qatnashish uchun to'g'ridan-to'g'ri Temurga yozing.`;
+  if (titleEl) titleEl.textContent = tariffName;
+  if (priceEl) priceEl.textContent = tariffPrice;
 
-  const encodedMsg = encodeURIComponent(`Assalomu alaykum Temur! Men saytingiz orqali "${tariffName}" (${tariffPrice}) tarifiga yozilmoqchiman.`);
-  
-  tgBtn.href = `https://t.me/karate_patsan?text=${encodedMsg}`;
-  instaBtn.href = `https://instagram.com/temur.fit`;
+  const encodedMsg = encodeURIComponent(
+    `Assalomu alaykum Temur! Men saytingiz orqali "${tariffName}" (${tariffPrice}) tarifiga yozilmoqchiman.`
+  );
 
-  modal.classList.remove('hidden');
+  if (tgLink) {
+    tgLink.href = `https://t.me/karate_patsan?text=${encodedMsg}`;
+  }
+  if (instaLink) {
+    instaLink.href = `https://instagram.com/temur.fit`;
+  }
+
+  if (modal) {
+    modal.classList.add('active');
+  }
 }
 
-function closeTariffModal() {
+function closeEnroll() {
   const modal = document.getElementById('enrollModal');
-  modal.classList.add('hidden');
+  if (modal) {
+    modal.classList.remove('active');
+  }
 }
 
-// 3. Kaloriya va norma kalkulyatori
-function calculateFitness() {
-  const gender = document.getElementById('calcGender').value;
-  const age = parseFloat(document.getElementById('calcAge').value) || 25;
-  const weight = parseFloat(document.getElementById('calcWeight').value) || 70;
-  const height = parseFloat(document.getElementById('calcHeight').value) || 175;
-  const goal = document.getElementById('calcGoal').value;
+// 3. Kaloriya & Suv Kalkulyatori
+function initCalculator() {
+  const calcBtn = document.getElementById('btnCalculate');
+  if (!calcBtn) return;
 
-  // Mifflin-St Jeor formulasi
-  let bmr;
-  if (gender === 'male') {
-    bmr = 10 * weight + 6.25 * height - 5 * age + 5;
-  } else {
-    bmr = 10 * weight + 6.25 * height - 5 * age - 161;
-  }
+  calcBtn.addEventListener('click', () => {
+    const weight = parseFloat(document.getElementById('calcWeight').value) || 75;
+    const height = parseFloat(document.getElementById('calcHeight').value) || 178;
+    const age = parseFloat(document.getElementById('calcAge').value) || 24;
+    const goal = document.getElementById('calcGoal').value;
 
-  // O'rtacha faollik koeffitsiyenti (1.375)
-  let tdee = Math.round(bmr * 1.375);
-  let targetCalories = tdee;
-  let advice = '';
+    // BMR formulasi (Mifflin-St Jeor)
+    const bmr = 10 * weight + 6.25 * height - 5 * age + 5;
+    let tdee = bmr * 1.35; // O'rtacha faollik
 
-  if (goal === 'loss') {
-    targetCalories = Math.round(tdee - 450);
-    advice = '🔥 Yogʻ eritish uchun kunlik 400-500 kkal defitsit va yuqori oqsil ratsioni tavsiya etiladi.';
-  } else if (goal === 'gain') {
-    targetCalories = Math.round(tdee + 350);
-    advice = '💪 Mushak massasi yigʻish uchun sof mahsulotlar va ortiqcha 350 kkal profisit kerak.';
-  } else {
-    advice = '⚡ Tana shaklini saqlash va relefni yaxshilash uchun muvozanatli ovqatlanish rejasi zarur.';
-  }
+    let targetCal = Math.round(tdee);
+    let tariffRecommendation = '02 - 40 Kunlik Transformatsiya';
 
-  const protein = Math.round(weight * 2.0); // 2g/kg
-  const water = (weight * 0.035).toFixed(1); // 35ml/kg
+    if (goal === 'cut') {
+      targetCal = Math.round(tdee - 450);
+      tariffRecommendation = '02 - 40 Kunlik Transformatsiya (Yog\' eritish)';
+    } else if (goal === 'lean') {
+      targetCal = Math.round(tdee + 300);
+      tariffRecommendation = '03 - Individual Ishlash (Maksimal Natija)';
+    } else {
+      targetCal = Math.round(tdee - 350);
+      tariffRecommendation = '02 - 40 Kunlik Transformatsiya (Hit)';
+    }
 
-  document.getElementById('resCalories').textContent = targetCalories + ' kkal';
-  document.getElementById('resProtein').textContent = protein + ' g';
-  document.getElementById('resWater').textContent = water + ' L';
-  document.getElementById('resAdvice').textContent = advice;
+    const waterMin = (weight * 0.035).toFixed(1);
+    const waterMax = (weight * 0.042).toFixed(1);
 
-  document.getElementById('calcResult').classList.remove('hidden');
+    document.getElementById('resCalories').textContent = `${targetCal.toLocaleString()} kkal / kun`;
+    document.getElementById('resWater').textContent = `${waterMin} - ${waterMax} Litr`;
+    document.getElementById('resTariff').textContent = tariffRecommendation;
+  });
 }
 
-// Sahifa yuklanganda hodisalarni ulash
+// Boshlang'ich sozlamalar
 document.addEventListener('DOMContentLoaded', () => {
-  // Modal fonini bosganda yopish
+  initCurrencyToggle();
+  initCalculator();
+
   const modal = document.getElementById('enrollModal');
   if (modal) {
     modal.addEventListener('click', (e) => {
       if (e.target === modal) {
-        closeTariffModal();
+        closeEnroll();
       }
     });
   }
