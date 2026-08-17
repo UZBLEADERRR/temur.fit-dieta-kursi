@@ -1225,6 +1225,45 @@ body {
       </div>
     </div>
 
+    <!-- NATIJALAR (GORIZONTAL GALEREYA) -->
+    <section class="section" style="margin-bottom: 28px;">
+      <div class="section-tag">REAL NATIJALAR</div>
+      <h2 class="section-title">O'QUVCHILAR PROGRESSI</h2>
+      <p style="font-size: 0.85rem; color: #9aa8a0; margin-bottom: 12px;">Barmog'ingiz bilan yon tomonga suring 👉</p>
+
+      <div class="results-scroll-container">
+        <!-- Natija 1 -->
+        <div class="result-card-clean">
+          <div class="result-img-box">
+            <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=800&auto=format&fit=crop&q=80" alt="Natija 1">
+            <a href="https://t.me/TemurFit_natija/12" target="_blank" class="result-floating-btn">
+              <span>Ko'rish (Telegram)</span> ↗
+            </a>
+          </div>
+        </div>
+
+        <!-- Natija 2 -->
+        <div class="result-card-clean">
+          <div class="result-img-box">
+            <img src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=800&auto=format&fit=crop&q=80" alt="Natija 2">
+            <a href="https://t.me/TemurFit_natija/14" target="_blank" class="result-floating-btn">
+              <span>Ko'rish (Telegram)</span> ↗
+            </a>
+          </div>
+        </div>
+
+        <!-- Natija 3 -->
+        <div class="result-card-clean">
+          <div class="result-img-box">
+            <img src="https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=800&auto=format&fit=crop&q=80" alt="Natija 3">
+            <a href="https://t.me/TemurFit_natija/15" target="_blank" class="result-floating-btn">
+              <span>Ko'rish (Telegram)</span> ↗
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- TARIFLAR SECTION -->
     <section class="tariffs-section">
       <div class="section-tag">XIZMAT FORMATLARI</div>
@@ -1548,51 +1587,64 @@ body {
       </div>
     </section>
 
-    <!-- KALKULYATOR BLOKI -->
+    <!-- KALKULYATOR BLOKI (INTERAKTIV SLAYDERLAR) -->
     <section class="calc-section">
-      <div class="section-tag">INTERAKTIV HISOB-KITOBLAR</div>
-      <h2 class="section-title">KUNLIK KALORIYA & MAQSAD HISOBLAGICH</h2>
+      <div class="section-tag">APPLE HEALTH USLUBIDA</div>
+      <h2 class="section-title">KALORIYA & SUV HISOBLAGICH</h2>
 
       <div class="calc-card">
-        <div class="calc-grid">
-          <div class="form-group">
-            <label>Vazningiz (kg)</label>
-            <input type="number" id="calcWeight" placeholder="Masalan: 75" value="75">
+        <!-- Vazn slayder -->
+        <div class="calc-group">
+          <div class="calc-label-row">
+            <span class="calc-label-text">Vazningiz (kg)</span>
+            <span class="calc-val-pill" id="valWeightDisp">75 kg</span>
           </div>
-          <div class="form-group">
-            <label>Bo'yingiz (sm)</label>
-            <input type="number" id="calcHeight" placeholder="Masalan: 178" value="178">
-          </div>
-          <div class="form-group">
-            <label>Yoshingiz</label>
-            <input type="number" id="calcAge" placeholder="Masalan: 24" value="24">
-          </div>
-          <div class="form-group">
-            <label>Asosiy Maqsadingiz</label>
-            <select id="calcGoal">
-              <option value="cut">Vazn tashlash (Quritish / Yog' eritish)</option>
-              <option value="lean">Quruq mushak massasi yig'ish</option>
-              <option value="transform" selected>40 kunlik To'liq Transformatsiya</option>
-            </select>
-          </div>
+          <input type="range" class="slider-custom" id="calcWeight" min="45" max="150" value="75">
         </div>
 
-        <button type="button" class="btn-calc" id="btnCalculate">
-          Natijani Hisoblash
-        </button>
+        <!-- Bo'y slayder -->
+        <div class="calc-group">
+          <div class="calc-label-row">
+            <span class="calc-label-text">Bo'yingiz (sm)</span>
+            <span class="calc-val-pill" id="valHeightDisp">178 sm</span>
+          </div>
+          <input type="range" class="slider-custom" id="calcHeight" min="140" max="215" value="178">
+        </div>
 
-        <div class="calc-results" id="calcResults">
-          <div class="res-item">
-            <div class="res-lbl">Tavsiya etilgan kaloriya:</div>
-            <div class="res-val" id="resCalories">2,150 kkal / kun</div>
+        <!-- Yosh slayder -->
+        <div class="calc-group">
+          <div class="calc-label-row">
+            <span class="calc-label-text">Yoshingiz</span>
+            <span class="calc-val-pill" id="valAgeDisp">25 yosh</span>
           </div>
-          <div class="res-item">
-            <div class="res-lbl">Kunlik suv me'yori:</div>
-            <div class="res-val" id="resWater">2.8 - 3.2 Litr</div>
+          <input type="range" class="slider-custom" id="calcAge" min="14" max="70" value="25">
+        </div>
+
+        <!-- Maqsad tanlash -->
+        <div class="calc-group">
+          <div class="calc-label-row">
+            <span class="calc-label-text">Asosiy Maqsadingiz</span>
           </div>
-          <div class="res-item">
-            <div class="res-lbl">Tavsiya etiladigan tarif:</div>
-            <div class="res-val text-green" id="resTariff">02 - 40 Kunlik Transformatsiya</div>
+          <select id="calcGoal" class="calc-select">
+            <option value="cut">🔥 Yog' eritish va quritish (Vazn tashlash)</option>
+            <option value="transform" selected>⚡ 40 Kunlik To'liq Transformatsiya</option>
+            <option value="lean">💪 Quruq sifatli mushak massasi yig'ish</option>
+          </select>
+        </div>
+
+        <!-- Natija ekrani -->
+        <div class="calc-result-box" id="calcResults">
+          <div class="result-row">
+            <span class="result-title">Tavsiya etilgan kaloriya:</span>
+            <span class="result-value-big" id="resCalories">2,150 kkal / kun</span>
+          </div>
+          <div class="result-row">
+            <span class="result-title">Kunlik suv me'yori:</span>
+            <span class="result-value-big" id="resWater">2.6 - 3.2 Litr</span>
+          </div>
+          <div class="result-row">
+            <span class="result-title">Tavsiya etiladigan tarif:</span>
+            <span class="result-value-big" id="resTariff">02 - 40 Kunlik Transformatsiya</span>
           </div>
         </div>
       </div>

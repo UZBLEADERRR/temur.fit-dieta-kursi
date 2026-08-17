@@ -72,45 +72,74 @@ function closeEnroll() {
   }
 }
 
-// 3. Kaloriya & Suv Kalkulyatori
-function initCalculator() {
-  const calcBtn = document.getElementById('btnCalculate');
-  if (!calcBtn) return;
+// 3. Kaloriya & Suv Kalkulyatori (Real-time Jonli Hisoblash)
+function computeFitnessMetrics() {
+  const weightInput = document.getElementById('calcWeight');
+  const heightInput = document.getElementById('calcHeight');
+  const ageInput = document.getElementById('calcAge');
+  const goalInput = document.getElementById('calcGoal');
 
-  calcBtn.addEventListener('click', () => {
-    const weight = parseFloat(document.getElementById('calcWeight').value) || 75;
-    const height = parseFloat(document.getElementById('calcHeight').value) || 178;
-    const age = parseFloat(document.getElementById('calcAge').value) || 24;
-    const goal = document.getElementById('calcGoal').value;
+  if (!weightInput || !heightInput || !ageInput || !goalInput) return;
 
-    // BMR formulasi (Mifflin-St Jeor)
-    const bmr = 10 * weight + 6.25 * height - 5 * age + 5;
-    let tdee = bmr * 1.35; // O'rtacha faollik
+  const weight = parseFloat(weightInput.value) || 75;
+  const height = parseFloat(heightInput.value) || 178;
+  const age = parseFloat(ageInput.value) || 25;
+  const goal = goalInput.value;
 
-    let targetCal = Math.round(tdee);
-    let tariffRecommendation = '02 - 40 Kunlik Transformatsiya';
+  // Ko'rsatkich qiymatlarini ekranga yozish
+  const dispWeight = document.getElementById('valWeightDisp');
+  const dispHeight = document.getElementById('valHeightDisp');
+  const dispAge = document.getElementById('valAgeDisp');
 
-    if (goal === 'cut') {
-      targetCal = Math.round(tdee - 450);
-      tariffRecommendation = '02 - 40 Kunlik Transformatsiya (Yog\' eritish)';
-    } else if (goal === 'lean') {
-      targetCal = Math.round(tdee + 300);
-      tariffRecommendation = '03 - Individual Ishlash (Maksimal Natija)';
-    } else {
-      targetCal = Math.round(tdee - 350);
-      tariffRecommendation = '02 - 40 Kunlik Transformatsiya (Hit)';
-    }
+  if (dispWeight) dispWeight.textContent = weight + ' kg';
+  if (dispHeight) dispHeight.textContent = height + ' sm';
+  if (dispAge) dispAge.textContent = age + ' yosh';
 
-    const waterMin = (weight * 0.035).toFixed(1);
-    const waterMax = (weight * 0.042).toFixed(1);
+  // Mifflin-St Jeor formulasi
+  const bmr = 10 * weight + 6.25 * height - 5 * age + 5;
+  let tdee = bmr * 1.35; // O'rtacha faollik koeffitsiyenti
 
-    document.getElementById('resCalories').textContent = `${targetCal.toLocaleString()} kkal / kun`;
-    document.getElementById('resWater').textContent = `${waterMin} - ${waterMax} Litr`;
-    document.getElementById('resTariff').textContent = tariffRecommendation;
-  });
+  let targetCal = Math.round(tdee);
+  let tariffRecommendation = '02 - 40 Kunlik Transformatsiya';
+
+  if (goal === 'cut') {
+    targetCal = Math.round(tdee - 450);
+    tariffRecommendation = '02 - 40 Kunlik Transformatsiya (Yog\' eritish)';
+  } else if (goal === 'lean') {
+    targetCal = Math.round(tdee + 300);
+    tariffRecommendation = '03 - Individual Ishlash (Maksimal Natija)';
+  } else {
+    targetCal = Math.round(tdee - 350);
+    tariffRecommendation = '02 - 40 Kunlik Transformatsiya (Hit)';
+  }
+
+  const waterMin = (weight * 0.035).toFixed(1);
+  const waterMax = (weight * 0.042).toFixed(1);
+
+  const resCal = document.getElementById('resCalories');
+  const resWater = document.getElementById('resWater');
+  const resTariff = document.getElementById('resTariff');
+
+  if (resCal) resCal.textContent = `${targetCal.toLocaleString()} kkal / kun`;
+  if (resWater) resWater.textContent = `${waterMin} - ${waterMax} Litr`;
+  if (resTariff) resTariff.textContent = tariffRecommendation;
 }
 
-// Boshlang'ich sozlamalar
+function initCalculator() {
+  const weightInput = document.getElementById('calcWeight');
+  const heightInput = document.getElementById('calcHeight');
+  const ageInput = document.getElementById('calcAge');
+  const goalInput = document.getElementById('calcGoal');
+
+  if (weightInput) weightInput.addEventListener('input', computeFitnessMetrics);
+  if (heightInput) heightInput.addEventListener('input', computeFitnessMetrics);
+  if (ageInput) ageInput.addEventListener('input', computeFitnessMetrics);
+  if (goalInput) goalInput.addEventListener('change', computeFitnessMetrics);
+
+  computeFitnessMetrics();
+}
+
+// Boshlang'ich ishga tushirish
 document.addEventListener('DOMContentLoaded', () => {
   initCurrencyToggle();
   initCalculator();
